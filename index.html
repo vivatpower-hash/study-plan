@@ -20,7 +20,7 @@ main{padding:10px}
 .tag.duty{background:#4a90d9;color:#fff}
 .task{display:flex;gap:8px;padding:8px 0;border-top:1px solid #eef}
 .task:first-of-type{border-top:0}
-.task .n{font-weight:700;min-width:22px}.task.done .txt{text-decoration:line-through;opacity:.5}
+.task .n{font-weight:700;min-width:22px}.task.done .txt{color:#16a34a;font-weight:600}.fx{position:fixed;pointer-events:none;z-index:9999;font-size:22px;transition:transform .9s ease-out,opacity .9s ease-out}
 .task .txt{flex:1;font-size:15px;line-height:1.35}
 .task.carry{background:#fff6e0;border-radius:8px;padding:8px}
 .star{background:#fff1b8;border-radius:4px;padding:0 3px;white-space:nowrap}
@@ -84,7 +84,8 @@ function view(v){document.querySelectorAll('nav button').forEach(b=>b.classList.
   <div class=day><b>สำรองข้อมูล</b><p class=muted>ข้อมูลเก็บในเครื่องนี้เท่านั้น กดคัดลอกไว้เป็นระยะ</p><button onclick="navigator.clipboard.writeText(JSON.stringify({duty:st.duty,done:st.done,moved:st.moved}));alert('คัดลอกแล้ว')">คัดลอกข้อมูล</button> <button onclick="imp()">นำเข้าข้อมูล</button></div>
   <div class=day><b>ที่มาของ ★</b><p class=muted>ผช. = จำนวนปีที่ออกข้อสอบผู้ช่วยผู้พิพากษา (สถิติ Suthep 2541–2561 และ LawSiam 2541–2564) · อก. = จำนวนปีที่ออกข้อสอบอัยการผู้ช่วย (MUJI 2557–2565) · รายการ ๒ ท่องเฉพาะมาตราสำคัญของเรื่องเดียวกับรายการ ๑ ในวันนั้น · ช่วงท้ายท่องซ้ำ ★ ทุกประมวล</p></div>`}
   window._v=v}
-function tg(id){if(st.done[id])delete st.done[id];else st.done[id]=todayISO();save();view(_v)}
+function boom(x,y){const e=['⭐','✨','🌟','🎉','💫'];for(let i=0;i<24;i++){const d=document.createElement('div');d.className='fx';d.textContent=e[i%5];d.style.left=x+'px';d.style.top=y+'px';document.body.appendChild(d);const a=Math.random()*6.28,r=80+Math.random()*120;requestAnimationFrame(()=>{d.style.transform=`translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px) scale(1.4) rotate(${a*200}deg)`;d.style.opacity=0});setTimeout(()=>d.remove(),1000)}if(navigator.vibrate)navigator.vibrate(60)}
+function tg(id){const ev=window.event;if(st.done[id])delete st.done[id];else{st.done[id]=todayISO();boom(ev&&ev.clientX||innerWidth/2,ev&&ev.clientY||innerHeight/2)}save();view(_v)}
 function dt(s){if(!s)return;const i=st.duty.indexOf(s);i<0?st.duty.push(s):st.duty.splice(i,1);save();view(_v)}
 function mv(id){const D=document.getElementById('dlg');document.getElementById('dlgb').innerHTML=`<b>ย้ายงานนี้ไป</b><p><button class=pri onclick="mvTo(${id},'${add(st.exam,-3)}')">ท้ายแผน (${thd(add(st.exam,-3))})</button></p><p>หรือวันที่ <input type=date id=md value="${add(todayISO(),1)}"> <button class=pri onclick="mvTo(${id},document.getElementById('md').value)">ย้าย</button></p><p><button onclick="document.getElementById('dlg').close()">ยกเลิก</button></p>`;D.showModal()}
 function mvTo(id,s){if(s){st.moved[id]=s;save()}document.getElementById('dlg').close();view(_v)}
